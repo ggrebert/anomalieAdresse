@@ -837,8 +837,7 @@ components:
       allOf:
         - $ref: https://raw.githubusercontent.com/before-interop/common/main/common/schemas/TroubleTicket.openapi.yaml#/components/schemas/TroubleTicket
       required:
-        - code_oi
-        - code_oc
+        - relatedParty
         - "@type"
       properties:
         "@baseType":
@@ -958,22 +957,23 @@ components:
             * `SIMPLE`: cas ne nécessitant pas d’intervention sur le terrain,
               pas d’intervention sur le réseau ou de réalignement de référentiels.
             * `COMPLEX`: cas qui n’est pas un cas simple
-        code_oi:
-          $ref: https://raw.githubusercontent.com/before-interop/common/main/common/schemas/Arcep.openapi.yaml#/components/schemas/CodeOperateurArcep
-          description: Code ARCEP de l'OI.
+        relatedParty:
+          description: |
+            Liste des parties prenantes liées au ticket.
 
-            La valeur est renseignée par l'OC à la création du ticket.
+            La valeur est renseignée par l'OI à la création du ticket.
 
-            L'OI peut choisir de renseigner ou modifier ce code lors de la création du ticket,
-            et donc rendre ce paramètre en lecture seule.
-        code_oc:
-          $ref: https://raw.githubusercontent.com/before-interop/common/main/common/schemas/Arcep.openapi.yaml#/components/schemas/CodeOperateurArcep
-          description: Code ARCEP de l'OC.
+            **Ordre des éléments de la liste:**
 
-            La valeur est renseignée par l'OC à la création du ticket.
-
-            L'OI peut choisir de renseigner ou modifier ce code lors de la création du ticket,
-            et donc rendre ce paramètre en lecture seule.
+            * Le premier élément de la liste est l'OI.
+            * Le deuxième élément de la liste est l'OC.
+          readOnly: true
+          minItems: 2
+          maxItems: 2
+          type: array
+          items:
+            allOf:
+              - $ref: "#/components/schemas/RelatedParty"
         externalId:
           description: Référence interne du ticket de l'OC.
         ticketType:
@@ -1297,3 +1297,16 @@ components:
           oneOf:
             - $ref: "#/components/schemas/AnomalieAdresseCreation"
             - $ref: "#/components/schemas/AnomalieAdresseUpdate"
+
+    RelatedParty:
+      allOf:
+        - $ref: https://raw.githubusercontent.com/before-interop/common/main/common/schemas/RelatedEntity.openapi.yaml#/components/schemas/RelatedEntity
+      properties:
+        "@referredType":
+          const: Operator
+        id:
+          $ref: https://raw.githubusercontent.com/before-interop/common/main/common/schemas/Arcep.openapi.yaml#/components/schemas/CodeOperateurArcep
+        role:
+          enum:
+            - OI
+            - OC
