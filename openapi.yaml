@@ -696,6 +696,43 @@ paths:
         default:
           $ref: https://raw.githubusercontent.com/before-interop/common/main/common/responses/errors.openapi.yaml#/components/responses/default
 
+    post:
+      tags:
+        - Event
+        - OC
+      summary: Receive an event for a trouble ticket
+      description: Receive an event for a trouble ticket
+      requestBody:
+        description: The event to receive
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Event"
+      responses:
+        default:
+          description: |
+            L'événement a été reçu avec succès.
+
+            La réponse n'a pas l'obligation de contenir un body.
+            Si l'OC retourne un body, celui-ci pourra être enregistré dans le journal de l'OI.
+        4xx:
+          description: |
+            Erreur lors de la réception de l'événement.
+
+            L'OI ne doit pas retransmettre l'événement à l'OC.
+
+            La réponse n'a pas l'obligation de contenir un body.
+            Si l'OC retourne un body, celui-ci pourra être enregistré dans le journal de l'OI.
+        5xx:
+          description: |
+            Erreur lors de la réception de l'événement.
+
+            L'OI peut retransmettre l'événement à l'OC.
+
+            La réponse n'a pas l'obligation de contenir un body.
+            Si l'OC retourne un body, celui-ci pourra être enregistré dans le journal de l'OI.
+
   /{AnomalieAdresseId}/event:
     parameters:
       - $ref: "#/components/parameters/anomalieAdresseId"
@@ -744,43 +781,6 @@ paths:
         "404": *response404
         default:
           $ref: https://raw.githubusercontent.com/before-interop/common/main/common/responses/errors.openapi.yaml#/components/responses/default
-
-    post:
-      tags:
-        - Event
-        - OC
-      summary: Receive an event for a trouble ticket
-      description: Receive an event for a trouble ticket
-      requestBody:
-        description: The event to receive
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Event"
-      responses:
-        default:
-          description: |
-            L'événement a été reçu avec succès.
-
-            La réponse n'a pas l'obligation de contenir un body.
-            Si l'OC retourne un body, celui-ci pourra être enregistré dans le journal de l'OI.
-        4xx:
-          description: |
-            Erreur lors de la réception de l'événement.
-
-            L'OI ne doit pas retransmettre l'événement à l'OC.
-
-            La réponse n'a pas l'obligation de contenir un body.
-            Si l'OC retourne un body, celui-ci pourra être enregistré dans le journal de l'OI.
-        5xx:
-          description: |
-            Erreur lors de la réception de l'événement.
-
-            L'OI peut retransmettre l'événement à l'OC.
-
-            La réponse n'a pas l'obligation de contenir un body.
-            Si l'OC retourne un body, celui-ci pourra être enregistré dans le journal de l'OI.
 
 components:
   parameters:
